@@ -1,10 +1,13 @@
-package com.simoncherry.fakecall;
+package com.simoncherry.fakecall.setting;
 
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.view.Window;
+
+import com.simoncherry.fakecall.R;
+import com.simoncherry.fakecall.util.SettingTextWatcher;
 
 /**
  * Created by Simon on 2016/7/30.

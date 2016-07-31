@@ -1,4 +1,4 @@
-package com.simoncherry.fakecall;
+package com.simoncherry.fakecall.test;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -22,9 +22,12 @@ import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.sunflower.FlowerCollector;
+import com.simoncherry.fakecall.util.ApkInstaller;
+import com.simoncherry.fakecall.R;
+import com.simoncherry.fakecall.setting.TtsSettings;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    private static String TAG = MainActivity.class.getSimpleName();
+public class IflytekTestActivity extends AppCompatActivity implements View.OnClickListener{
+    private static String TAG = IflytekTestActivity.class.getSimpleName();
     // 语音合成对象
     private SpeechSynthesizer mTts;
 
@@ -54,11 +57,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_iflytek_test);
 
         initLayout();
         // 初始化合成对象
-        mTts = SpeechSynthesizer.createSynthesizer(MainActivity.this, mTtsInitListener);
+        mTts = SpeechSynthesizer.createSynthesizer(IflytekTestActivity.this, mTtsInitListener);
 
         // 云端发音人名称列表
         mCloudVoicersEntries = getResources().getStringArray(R.array.voicer_cloud_entries);
@@ -67,19 +70,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mSharedPreferences = getSharedPreferences(TtsSettings.PREFER_NAME, MODE_PRIVATE);
         mToast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
 
-        mInstaller = new  ApkInstaller(MainActivity.this);
+        mInstaller = new  ApkInstaller(IflytekTestActivity.this);
     }
 
     /**
      * 初始化Layout。
      */
     private void initLayout() {
-        findViewById(R.id.tts_play).setOnClickListener(MainActivity.this);
-        findViewById(R.id.tts_cancel).setOnClickListener(MainActivity.this);
-        findViewById(R.id.tts_pause).setOnClickListener(MainActivity.this);
-        findViewById(R.id.tts_resume).setOnClickListener(MainActivity.this);
-        findViewById(R.id.image_tts_set).setOnClickListener(MainActivity.this);
-        findViewById(R.id.tts_btn_person_select).setOnClickListener(MainActivity.this);
+        findViewById(R.id.tts_play).setOnClickListener(IflytekTestActivity.this);
+        findViewById(R.id.tts_cancel).setOnClickListener(IflytekTestActivity.this);
+        findViewById(R.id.tts_pause).setOnClickListener(IflytekTestActivity.this);
+        findViewById(R.id.tts_resume).setOnClickListener(IflytekTestActivity.this);
+        findViewById(R.id.image_tts_set).setOnClickListener(IflytekTestActivity.this);
+        findViewById(R.id.tts_btn_person_select).setOnClickListener(IflytekTestActivity.this);
 
         mRadioGroup=((RadioGroup) findViewById(R.id.tts_rediogroup));
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -113,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(view.getId()) {
             case R.id.image_tts_set:
                 if(SpeechConstant.TYPE_CLOUD.equals(mEngineType)){
-                    Intent intent = new Intent(MainActivity.this, TtsSettings.class);
+                    Intent intent = new Intent(IflytekTestActivity.this, TtsSettings.class);
                     startActivity(intent);
                 }else{
                     // 本地设置跳转到语记中
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // 合成的音频格式：只支持pcm格式
             case R.id.tts_play:
                 // 移动数据分析，收集开始合成事件
-                FlowerCollector.onEvent(MainActivity.this, "tts_play");
+                FlowerCollector.onEvent(IflytekTestActivity.this, "tts_play");
 
                 String text = ((EditText) findViewById(R.id.tts_text)).getText().toString();
                 // 设置参数
@@ -336,7 +339,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         //移动数据统计分析
-        FlowerCollector.onResume(MainActivity.this);
+        FlowerCollector.onResume(IflytekTestActivity.this);
         FlowerCollector.onPageStart(TAG);
         super.onResume();
     }
@@ -344,7 +347,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onPause() {
         //移动数据统计分析
         FlowerCollector.onPageEnd(TAG);
-        FlowerCollector.onPause(MainActivity.this);
+        FlowerCollector.onPause(IflytekTestActivity.this);
         super.onPause();
     }
 }

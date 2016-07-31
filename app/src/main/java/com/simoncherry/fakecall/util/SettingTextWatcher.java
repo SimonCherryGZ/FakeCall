@@ -1,4 +1,4 @@
-package com.simoncherry.fakecall;
+package com.simoncherry.fakecall.util;
 
 import android.content.Context;
 import android.preference.EditTextPreference;

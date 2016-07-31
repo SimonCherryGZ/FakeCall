@@ -1,4 +1,4 @@
-package com.simoncherry.fakecall;
+package com.simoncherry.fakecall.util;
 
 import android.app.Activity;
 import android.content.Context;

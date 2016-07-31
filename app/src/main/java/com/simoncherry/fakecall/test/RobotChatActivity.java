@@ -1,4 +1,4 @@
-package com.simoncherry.fakecall;
+package com.simoncherry.fakecall.test;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -30,6 +30,12 @@ import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
 import com.iflytek.sunflower.FlowerCollector;
+import com.simoncherry.fakecall.util.ApkInstaller;
+import com.simoncherry.fakecall.util.FucUtil;
+import com.simoncherry.fakecall.setting.IatSettings;
+import com.simoncherry.fakecall.util.JsonParser;
+import com.simoncherry.fakecall.R;
+import com.simoncherry.fakecall.setting.TtsSettings;
 import com.turing.androidsdk.SDKInit;
 import com.turing.androidsdk.SDKInitBuilder;
 import com.turing.androidsdk.TuringApiManager;
@@ -44,9 +50,9 @@ import turing.os.http.core.ErrorMessage;
 import turing.os.http.core.HttpConnectionListener;
 import turing.os.http.core.RequestResult;
 
-public class RobotCallActivity extends AppCompatActivity {
+public class RobotChatActivity extends AppCompatActivity {
 
-    private final String TAG = RobotCallActivity.class.getSimpleName();
+    private final String TAG = RobotChatActivity.class.getSimpleName();
 
     // 语音听写对象
     private SpeechRecognizer mIat;
@@ -112,7 +118,7 @@ public class RobotCallActivity extends AppCompatActivity {
                 case TYPE_RESPONSE:
                     tv_response.setText("机器人：" + msg.obj);
 
-                    FlowerCollector.onEvent(RobotCallActivity.this, "tts_play");
+                    FlowerCollector.onEvent(RobotChatActivity.this, "tts_play");
                     String text = msg.obj.toString();
                     // 设置参数
                     setTTSParam();
@@ -133,7 +139,7 @@ public class RobotCallActivity extends AppCompatActivity {
                         edt_text.setText("");
                         mTuringApiManager.requestTuringAPI(result);
                     } else {
-                        Toast.makeText(RobotCallActivity.this, "识别内容为空", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RobotChatActivity.this, "识别内容为空", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 default:
@@ -145,7 +151,7 @@ public class RobotCallActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_robot_call);
+        setContentView(R.layout.activity_robot_chat);
 
         tv_send = (TextView) findViewById(R.id.tv_send);
         tv_response = (TextView) findViewById(R.id.tv_response);
@@ -166,7 +172,7 @@ public class RobotCallActivity extends AppCompatActivity {
                     edt_text.setText("");
                     mTuringApiManager.requestTuringAPI(result);
                 } else {
-                    Toast.makeText(RobotCallActivity.this, "发送内容不能为空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RobotChatActivity.this, "发送内容不能为空", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -187,7 +193,7 @@ public class RobotCallActivity extends AppCompatActivity {
                     isListening = true;
 
                     // 移动数据分析，收集开始听写事件
-                    FlowerCollector.onEvent(RobotCallActivity.this, "iat_recognize");
+                    FlowerCollector.onEvent(RobotChatActivity.this, "iat_recognize");
 
                     mIatResults.clear();
                     // 设置参数
@@ -290,7 +296,7 @@ public class RobotCallActivity extends AppCompatActivity {
         btn_setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intents = new Intent(RobotCallActivity.this, IatSettings.class);
+                Intent intents = new Intent(RobotChatActivity.this, IatSettings.class);
                 startActivity(intents);
             }
         });
@@ -301,16 +307,16 @@ public class RobotCallActivity extends AppCompatActivity {
     private void init() {
         // 初始化识别无UI识别对象
         // 使用SpeechRecognizer对象，可根据回调消息自定义界面；
-        mIat = SpeechRecognizer.createRecognizer(RobotCallActivity.this, mInitListener);
+        mIat = SpeechRecognizer.createRecognizer(RobotChatActivity.this, mInitListener);
         // 初始化听写Dialog，如果只使用有UI听写功能，无需创建SpeechRecognizer
         // 使用UI听写功能，请根据sdk文件目录下的notice.txt,放置布局文件和图片资源
-        mIatDialog = new RecognizerDialog(RobotCallActivity.this, mInitListener);
+        mIatDialog = new RecognizerDialog(RobotChatActivity.this, mInitListener);
 
         mSharedPreferencesIAT = getSharedPreferences(IatSettings.PREFER_NAME,
                 Activity.MODE_PRIVATE);
 
         // 初始化合成对象
-        mTts = SpeechSynthesizer.createSynthesizer(RobotCallActivity.this, mTtsInitListener);
+        mTts = SpeechSynthesizer.createSynthesizer(RobotChatActivity.this, mTtsInitListener);
         // 云端发音人名称列表
         mCloudVoicersEntries = getResources().getStringArray(R.array.voicer_cloud_entries);
         mCloudVoicersValue = getResources().getStringArray(R.array.voicer_cloud_values);
@@ -318,7 +324,7 @@ public class RobotCallActivity extends AppCompatActivity {
         mSharedPreferencesTTS = getSharedPreferences(TtsSettings.PREFER_NAME, MODE_PRIVATE);
         mToast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
 
-        mInstaller = new  ApkInstaller(RobotCallActivity.this);
+        mInstaller = new  ApkInstaller(RobotChatActivity.this);
 
         // turingSDK初始化
         SDKInitBuilder builder = new SDKInitBuilder(this)
@@ -327,14 +333,14 @@ public class RobotCallActivity extends AppCompatActivity {
             @Override
             public void onFail(String error) {
                 Log.e(TAG, error);
-                Toast.makeText(RobotCallActivity.this, "turingSDK初始化失败！ msg:" + error, Toast.LENGTH_SHORT).show();
+                Toast.makeText(RobotChatActivity.this, "turingSDK初始化失败！ msg:" + error, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onComplete() {
                 // 获取userid成功后，才可以请求Turing服务器，需要请求必须在此回调成功，才可正确请求
-                mTuringApiManager = new TuringApiManager(RobotCallActivity.this);
+                mTuringApiManager = new TuringApiManager(RobotChatActivity.this);
                 mTuringApiManager.setHttpListener(myHttpConnectionListener);
-                Toast.makeText(RobotCallActivity.this, "turingSDK初始化成功！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RobotChatActivity.this, "turingSDK初始化成功！", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -712,7 +718,7 @@ public class RobotCallActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         //移动数据统计分析
-        FlowerCollector.onResume(RobotCallActivity.this);
+        FlowerCollector.onResume(RobotChatActivity.this);
         FlowerCollector.onPageStart(TAG);
         super.onResume();
     }
@@ -720,7 +726,7 @@ public class RobotCallActivity extends AppCompatActivity {
     protected void onPause() {
         //移动数据统计分析
         FlowerCollector.onPageEnd(TAG);
-        FlowerCollector.onPause(RobotCallActivity.this);
+        FlowerCollector.onPause(RobotChatActivity.this);
 
         mIat.stopListening();
         mIat.cancel();

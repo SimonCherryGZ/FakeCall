@@ -1,8 +1,12 @@
-package com.simoncherry.fakecall;
+package com.simoncherry.fakecall.activity;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -10,6 +14,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +37,11 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.sunflower.FlowerCollector;
+import com.simoncherry.fakecall.R;
+import com.simoncherry.fakecall.setting.IatSettings;
+import com.simoncherry.fakecall.setting.TtsSettings;
+import com.simoncherry.fakecall.util.ApkInstaller;
+import com.simoncherry.fakecall.util.JsonParser;
 import com.turing.androidsdk.SDKInit;
 import com.turing.androidsdk.SDKInitBuilder;
 import com.turing.androidsdk.TuringApiManager;
@@ -48,9 +58,9 @@ import turing.os.http.core.ErrorMessage;
 import turing.os.http.core.HttpConnectionListener;
 import turing.os.http.core.RequestResult;
 
-public class RobotChatActivity extends AppCompatActivity {
+public class RobotCallActivity extends AppCompatActivity implements SensorEventListener {
 
-    private final String TAG = RobotChatActivity.class.getSimpleName();
+    private final String TAG = RobotCallActivity.class.getSimpleName();
     private Context mContext;
     private boolean isSpeaker = false;
     private boolean isMute = false;
@@ -95,6 +105,11 @@ public class RobotChatActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
     AudioManager audioManager;
+    //调用距离传感器，控制屏幕
+    private SensorManager sensorManager;//传感器管理对象
+    //屏幕开关
+    private PowerManager localPowerManager = null;//电源管理对象
+    private PowerManager.WakeLock localWakeLock = null;//电源锁
 
     public final int TYPE_RESPONSE = 1024;
     public final int TYPE_RESULT = 2048;
@@ -136,8 +151,8 @@ public class RobotChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_robot_chat);
-        mContext = RobotChatActivity.this;
+        setContentView(R.layout.activity_robot_call);
+        mContext = RobotCallActivity.this;
 
         glowPad = (GlowPadView) findViewById(R.id.incomingCallWidget);
         layoutOnCall = (RelativeLayout) findViewById(R.id.layout_on_call);
@@ -237,12 +252,10 @@ public class RobotChatActivity extends AppCompatActivity {
             public void onGrabbed(View v, int handle) {
                 // Do nothing
             }
-
             @Override
             public void onReleased(View v, int handle) {
                 // Do nothing
             }
-
             @Override
             public void onTrigger(View v, int target) {
                 //Toast.makeText(FakeCallActivity.this, "Target triggered! ID=" + target, Toast.LENGTH_SHORT).show();
@@ -259,8 +272,13 @@ public class RobotChatActivity extends AppCompatActivity {
                     chronometer.setBase(SystemClock.elapsedRealtime());
                     chronometer.start();
 
+                    audioManager.setSpeakerphoneOn(false);//关闭扬声器
+                    audioManager.setRouting(AudioManager.MODE_NORMAL, AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
+                    setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+                    audioManager.setMode(AudioManager.MODE_IN_CALL);  //把声音设定成Earpiece（听筒）出来，设定为正在通话中
+
                     setTTSParam();
-                    int code = mTts.startSpeaking("喂，你好，请问是王小明吗？", mTtsListener);
+                    int code = mTts.startSpeaking("喂，你好，请问是蒲蒲团信息科技有限公司吗？", mTtsListener);
                     if (code != ErrorCode.SUCCESS) {
                         if(code == ErrorCode.ERROR_COMPONENT_NOT_INSTALLED){
                             //未安装则跳转到提示安装页面
@@ -314,6 +332,10 @@ public class RobotChatActivity extends AppCompatActivity {
 //        setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
 //        audioManager.setMode(AudioManager.MODE_IN_CALL);  //把声音设定成Earpiece（听筒）出来，设定为正在通话中
 
+        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        localPowerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        localWakeLock = this.localPowerManager.newWakeLock(32, "MyPower");
+
         cTimer = new CountDownTimer(30000, 500) {
             public void onTick(long millisUntilFinished) {
                 glowPad.ping();
@@ -324,20 +346,10 @@ public class RobotChatActivity extends AppCompatActivity {
                 finish();
             }
         };
-//        //cTimer.start();
-//
-//        try {
-//            mediaPlayer.setDataSource(this, RingtoneManager
-//                    .getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-//            mediaPlayer.prepare();
-//            mediaPlayer.start();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
         mToast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
         mToast.setGravity(Gravity.CENTER, 0, 0);
-        mInstaller = new  ApkInstaller(RobotChatActivity.this);
+        mInstaller = new  ApkInstaller(RobotCallActivity.this);
     }
 
     private void initIAT() {
@@ -633,15 +645,8 @@ public class RobotChatActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mTts.stopSpeaking();
-        // 退出时释放连接
-        mTts.destroy();
-    }
-
-    @Override
     protected void onResume() {
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY), SensorManager.SENSOR_DELAY_NORMAL);
         //移动数据统计分析
         FlowerCollector.onResume(mContext);
         FlowerCollector.onPageStart(TAG);
@@ -669,5 +674,54 @@ public class RobotChatActivity extends AppCompatActivity {
         isListening = false;
 
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTts.stopSpeaking();
+        // 退出时释放连接
+        mTts.destroy();
+
+        if(sensorManager != null){
+            localWakeLock.release();//释放电源锁，如果不释放finish这个acitivity后仍然会有自动锁屏的效果，不信可以试一试
+            sensorManager.unregisterListener(this);//注销传感器监听
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float[] its = event.values;
+        //Log.d(TAG,"its array:"+its+"sensor type :"+event.sensor.getType()+" proximity type:"+Sensor.TYPE_PROXIMITY);
+        if (its != null && event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
+
+            System.out.println("its[0]:" + its[0]);
+            //经过测试，当手贴近距离感应器的时候its[0]返回值为0.0，当手离开时返回1.0
+            if (its[0] == 0.0) {// 贴近手机
+
+                System.out.println("hands up");
+                Log.d(TAG,"hands up in calling activity");
+                if (localWakeLock.isHeld()) {
+                    return;
+                } else{
+
+                    localWakeLock.acquire();// 申请设备电源锁
+                }
+            } else {// 远离手机
+
+                System.out.println("hands moved");
+                Log.d(TAG,"hands moved in calling activity");
+                if (localWakeLock.isHeld()) {
+                    return;
+                } else{
+                    localWakeLock.setReferenceCounted(false);
+                    localWakeLock.release(); // 释放设备电源锁
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 }

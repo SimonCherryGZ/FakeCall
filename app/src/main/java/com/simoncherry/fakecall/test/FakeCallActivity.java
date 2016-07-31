@@ -1,4 +1,4 @@
-package com.simoncherry.fakecall;
+package com.simoncherry.fakecall.test;
 
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.RelativeLayout;
+
+import com.simoncherry.fakecall.R;
 
 import net.frakbot.glowpadbackport.GlowPadView;
 

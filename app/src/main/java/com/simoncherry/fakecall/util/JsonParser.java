@@ -1,4 +1,4 @@
-package com.simoncherry.fakecall;
+package com.simoncherry.fakecall.util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

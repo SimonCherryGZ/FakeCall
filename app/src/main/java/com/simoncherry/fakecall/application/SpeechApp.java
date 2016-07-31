@@ -1,8 +1,9 @@
-package com.simoncherry.fakecall;
+package com.simoncherry.fakecall.application;
 
 import android.app.Application;
 
 import com.iflytek.cloud.SpeechUtility;
+import com.simoncherry.fakecall.R;
 
 /**
  * Created by Simon on 2016/7/30.
