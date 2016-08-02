@@ -2,12 +2,259 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context="com.simoncherry.fakecall.fragment.CallFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/acbuwa_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@drawable/top_bar_bg">
+
+        <TextView
+            android:id="@+id/topbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="通话记录" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/call_log_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/acbuwa_topbar"
+        android:cacheColorHint="@color/black"
+        android:fadingEdge="none"
+        android:visibility="visible" />
+    <ListView
+        android:id="@+id/contact_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/acbuwa_topbar"
+        android:cacheColorHint="@color/black"
+        android:fadingEdge="none"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/bohaopan"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Call" />
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@drawable/dial_input_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip" >
+
+            <Button
+                android:id="@+id/phone_view"
+                android:layout_width="0dip"
+                android:layout_height="40dp"
+                android:layout_marginRight="10dip"
+                android:layout_weight="1"
+                android:background="@drawable/dial_input_btn"
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:background="@drawable/dial_delete3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/dialNum1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/num1_ic"
+                android:tag="1" />
+
+            <Button
+                android:id="@+id/dialNum2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/num2_ic"
+                android:tag="2" />
+
+            <Button
+                android:id="@+id/dialNum3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/num3_ic"
+                android:tag="3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/dialNum4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/num4_ic"
+                android:tag="4" />
+
+            <Button
+                android:id="@+id/dialNum5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/num5_ic"
+                android:tag="5" />
+
+            <Button
+                android:id="@+id/dialNum6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/num6_ic"
+                android:tag="6" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/dialNum7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/num7_ic"
+                android:tag="7" />
+
+            <Button
+                android:id="@+id/dialNum8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/num8_ic"
+                android:tag="8" />
+
+            <Button
+                android:id="@+id/dialNum9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/num9_ic"
+                android:tag="9" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/dialx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/dialx_ic"
+                android:tag="*" />
+
+            <Button
+                android:id="@+id/dialNum0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/num0_ic"
+                android:tag="0" />
+
+            <Button
+                android:id="@+id/dialj"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/dialj_ic"
+                android:tag="#" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/keyboard_show_ll"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/dial_input_bg2"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="invisible" >
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/keyboard_show"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_tab_dial_pressed_up" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/miss_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/call_log_type_miss" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/in_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/call_log_type_in" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <Button
+                android:id="@+id/out_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/call_log_type_out" />
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>

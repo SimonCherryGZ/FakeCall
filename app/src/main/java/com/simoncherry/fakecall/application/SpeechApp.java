@@ -4,11 +4,23 @@ import android.app.Application;
 
 import com.iflytek.cloud.SpeechUtility;
 import com.simoncherry.fakecall.R;
+import com.simoncherry.fakecall.bean.ContactBean;
+
+import java.util.List;
 
 /**
  * Created by Simon on 2016/7/30.
  */
 public class SpeechApp extends Application {
+
+    private List<ContactBean> contactBeanList;
+
+    public List<ContactBean> getContactBeanList() {
+        return contactBeanList;
+    }
+    public void setContactBeanList(List<ContactBean> contactBeanList) {
+        this.contactBeanList = contactBeanList;
+    }
 
     @Override
     public void onCreate() {
