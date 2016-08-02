@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".application.SpeechApp"
@@ -25,8 +25,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--语音识别、合成测试-->
+        <!--主界面-->
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- 语音识别、合成测试 -->
         <activity android:name=".test.IflytekTestActivity">
+
             <!-- <intent-filter> -->
             <!-- <action android:name="android.intent.action.MAIN" /> -->
 
@@ -34,7 +43,7 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <!--图灵机器人测试-->
+        <!-- 图灵机器人测试 -->
         <activity android:name=".test.TuringTestActivity">
 
             <!-- <intent-filter> -->
@@ -44,15 +53,17 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <!---图灵机器人+语音识别、合成测试-->
+        <!-- -图灵机器人+语音识别、合成测试 -->
         <activity android:name=".test.RobotChatActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
-        <!---模拟通话界面测试-->
+        <!-- -模拟通话界面测试 -->
         <activity android:name=".test.FakeCallActivity">
 
             <!-- <intent-filter> -->
@@ -62,15 +73,14 @@
             <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-        <!---图灵机器人通话界面-->
+        <!-- -图灵机器人通话界面 -->
         <activity android:name=".activity.RobotCallActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
-
         <activity android:name=".setting.TtsSettings" />
         <activity android:name=".setting.IatSettings" />
 

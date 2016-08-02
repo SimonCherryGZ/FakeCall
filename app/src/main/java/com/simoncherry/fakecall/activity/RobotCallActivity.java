@@ -2,6 +2,8 @@ package com.simoncherry.fakecall.activity;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -17,6 +19,7 @@ import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.os.Vibrator;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -78,6 +81,7 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
     private int mPercentForBuffering = 0;
     private int mPercentForPlaying = 0;
     private int ret = 0;
+    private int selectedNum = 0;
 
     private String mEngineTypeTTS = SpeechConstant.TYPE_CLOUD;
     private String mEngineTypeIAT = SpeechConstant.TYPE_CLOUD;
@@ -153,6 +157,11 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_robot_call);
         mContext = RobotCallActivity.this;
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            voicer = bundle.getString("voicer");
+        }
 
         glowPad = (GlowPadView) findViewById(R.id.incomingCallWidget);
         layoutOnCall = (RelativeLayout) findViewById(R.id.layout_on_call);
@@ -209,6 +218,8 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
                         isMute = true;
                         ivMute.setImageResource(R.drawable.ic_mic_white_48dp);
                     }
+                    Intent iatSetting = new Intent(mContext, IatSettings.class);
+                    startActivity(iatSetting);
                     break;
                 case R.id.iv_keyboard:
                     if (isKeyBoard) {
@@ -218,6 +229,7 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
                         isKeyBoard = true;
                         ivKeyBoard.setImageResource(R.drawable.ic_keyboard_hide_white_48dp);
                     }
+                    showPresonSelectDialog();
                     break;
                 case R.id.iv_more:
                     if (isMore) {
@@ -227,6 +239,8 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
                         isMore = true;
                         ivMore.setImageResource(R.drawable.ic_more_horiz_white_48dp);
                     }
+                    Intent ttsSetting = new Intent(mContext, TtsSettings.class);
+                    startActivity(ttsSetting);
                     break;
                 case R.id.btn_cancel_call:
                     if (mIat.isListening()) {
@@ -723,5 +737,20 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    private void showPresonSelectDialog() {
+
+        new AlertDialog.Builder(this).setTitle("在线合成发音人选项")
+                .setSingleChoiceItems(mCloudVoicersEntries, // 单选框有几项,各是什么名字
+                        selectedNum, // 默认的选项
+                        new DialogInterface.OnClickListener() { // 点击单选框后的处理
+                            public void onClick(DialogInterface dialog,
+                                                int which) { // 点击了哪一项
+                                voicer = mCloudVoicersValue[which];
+                                selectedNum = which;
+                                dialog.dismiss();
+                            }
+                        }).show();
     }
 }

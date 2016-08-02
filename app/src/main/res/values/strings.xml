@@ -89,4 +89,49 @@
     <string name="text_tts_source_en">iFLYTEK is a national key software enterprise dedicated to the research of intelligent speech and language technologies, development of software and chip products, provision of speech information services, and integration of E-government systems. The intelligent speech technology of iFLYTEK, the core technology of the company, represents the top level in the world.</string>
 
     <string name="btn_toggle_multiplier">Toggle GlowPad mult</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string-array name="contact_name_entries">
+        <item>小燕</item>
+        <item>小宇</item>
+        <item>凯瑟琳</item>
+        <item>亨利</item>
+        <item>玛丽</item>
+        <item>小研</item>
+        <item>小琪</item>
+        <item>小峰</item>
+        <item>小梅</item>
+        <item>小莉</item>
+        <item>小蓉</item>
+        <item>小芸</item>
+        <item>小坤</item>
+        <item>小强</item>
+        <item>小莹</item>
+        <item>小新</item>
+        <item>楠楠</item>
+        <item>老孙</item>
+    </string-array>
+    <string-array name="contact_number_entries">
+        <item>13700008800</item>
+        <item>13700008801</item>
+        <item>13700008802</item>
+        <item>13700008803</item>
+        <item>13700008804</item>
+        <item>13700008805</item>
+        <item>13700008806</item>
+        <item>13700008807</item>
+        <item>13700008808</item>
+        <item>13700008809</item>
+        <item>13700008810</item>
+        <item>13700008811</item>
+        <item>13700008812</item>
+        <item>13700008813</item>
+        <item>13700008814</item>
+        <item>13700008815</item>
+        <item>13700008816</item>
+        <item>13700008817</item>
+    </string-array>
 </resources>
