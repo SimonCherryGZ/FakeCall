@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:id="@+id/layout_other_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ease_chatfrom_bg_normal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_other_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            tools:text="dgnpofna;ofasfafnafafanfapofnaopfasopfsaopdnaspoddasdasdasdasdasd" />
+
+        <TextView
+            android:id="@+id/tv_other_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_other_msg"
+            android:layout_alignRight="@+id/tv_other_msg"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            tools:text="23:25"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_mine_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/ease_chatto_bg_normal"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/tv_mine_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            tools:text="噼噼啪啪拍" />
+
+        <TextView
+            android:id="@+id/tv_mine_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_mine_msg"
+            android:layout_alignRight="@+id/tv_mine_msg"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            tools:text="23:25"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
