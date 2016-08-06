@@ -9,6 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/ease_chatfrom_bg_normal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="60dp"
         android:visibility="gone">
 
         <TextView
@@ -39,6 +41,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="60dp"
         android:background="@drawable/ease_chatto_bg_normal"
         android:visibility="gone" >
 
@@ -50,7 +54,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
-            tools:text="噼噼啪啪拍" />
+            tools:text="噼噼啪啪拍噼噼啪啪拍噼噼啪啪拍噼噼啪啪拍噼噼啪啪拍" />
 
         <TextView
             android:id="@+id/tv_mine_time"

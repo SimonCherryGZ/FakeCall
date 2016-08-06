@@ -5,10 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.shizhefei.view.indicator.Indicator;
 import com.shizhefei.view.indicator.IndicatorViewPager;
@@ -19,22 +21,33 @@ import com.simoncherry.fakecall.fragment.CallFragment;
 import com.simoncherry.fakecall.fragment.ChatFragment;
 import com.simoncherry.fakecall.fragment.ContactFragment;
 import com.simoncherry.fakecall.fragment.FirstLayerFragment;
+import com.simoncherry.fakecall.fragment.SmsFragment;
 
 
 public class MainActivity extends FragmentActivity {
 
-    private IndicatorViewPager indicatorViewPager;
+    private Fragment mFragmentAtPos2;
+    private MyAdapter myAdapter;
+    private SViewPager viewPager;
+    private int type = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SViewPager viewPager = (SViewPager) findViewById(R.id.tabmain_viewPager);
+        //SViewPager viewPager = (SViewPager) findViewById(R.id.tabmain_viewPager);
+        viewPager = (SViewPager) findViewById(R.id.tabmain_viewPager);
         Indicator indicator = (Indicator) findViewById(R.id.tabmain_indicator);
         indicator.setOnTransitionListener(new OnTransitionTextListener().setColor(Color.RED, Color.GRAY));
-        indicatorViewPager = new IndicatorViewPager(indicator, viewPager);
-        indicatorViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
+
+        mFragmentAtPos2 = new SmsFragment();
+
+        IndicatorViewPager indicatorViewPager = new IndicatorViewPager(indicator, viewPager);
+        //indicatorViewPager.setAdapter(new MyAdapter(getSupportFragmentManager()));
+        myAdapter = new MyAdapter(getSupportFragmentManager());
+        indicatorViewPager.setAdapter(myAdapter);
+
         // 禁止viewpager的滑动事件
         viewPager.setCanScroll(false);
         // 设置viewpager保留界面不重新加载的页面数量
@@ -70,13 +83,6 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public Fragment getFragmentForPage(int position) {
-//            FirstLayerFragment mainFragment = new FirstLayerFragment();
-//            Bundle bundle = new Bundle();
-//            bundle.putString(FirstLayerFragment.INTENT_STRING_TABNAME, tabNames[position]);
-//            bundle.putInt(FirstLayerFragment.INTENT_INT_INDEX, position);
-//            mainFragment.setArguments(bundle);
-//            return mainFragment;
-
             switch (position) {
                 case 0 :
                     CallFragment callFragment = new CallFragment();
@@ -85,12 +91,48 @@ public class MainActivity extends FragmentActivity {
                     ContactFragment contactFragment = new ContactFragment();
                     return contactFragment;
                 case 2:
-                    ChatFragment chatFragment = new ChatFragment();
-                    return  chatFragment;
+//                    ChatFragment chatFragment = new ChatFragment();
+//                    return  chatFragment;
+//                    smsFragment = new SmsFragment();
+//                    return  smsFragment;
+//                    if (type == 0) {
+//                        mFragmentAtPos2 = new SmsFragment();
+//                    } else {
+//                        mFragmentAtPos2 = new ChatFragment();
+//                    }
+                    return mFragmentAtPos2;
                 default:
                     FirstLayerFragment mainFragment = new FirstLayerFragment();
                     return mainFragment;
             }
         }
+
+        @Override
+        public int getItemPosition(Object object) {
+            if (object instanceof SmsFragment && mFragmentAtPos2 instanceof ChatFragment) {
+                return FragmentPagerAdapter.POSITION_NONE;
+            }
+            if (object instanceof ChatFragment && mFragmentAtPos2 instanceof SmsFragment) {
+                return FragmentPagerAdapter.POSITION_NONE;
+            }
+            return FragmentPagerAdapter.POSITION_UNCHANGED;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mFragmentAtPos2 instanceof ChatFragment && viewPager.getCurrentItem() == 2) {
+            mFragmentAtPos2 = new SmsFragment();
+            myAdapter.notifyDataSetChanged();
+            Toast.makeText(this, "change!", Toast.LENGTH_SHORT).show();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void showChatFragment() {
+        mFragmentAtPos2 = new ChatFragment();
+        myAdapter.notifyDataSetChanged();
+        Toast.makeText(this, "change!", Toast.LENGTH_SHORT).show();
     }
 }

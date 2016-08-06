@@ -134,4 +134,24 @@
         <item>13700008816</item>
         <item>13700008817</item>
     </string-array>
+    <string-array name="sms_text_entries">
+        <item>好，我先回酒店了</item>
+        <item>我搞掂啦，你出门就话我知啦</item>
+        <item>13719273131 任小姐</item>
+        <item>OK，多谢你</item>
+        <item>商业中心等好唔好</item>
+        <item>嗯~~~~~~~~</item>
+        <item>更正，英语是57</item>
+        <item>唔够你讲。。。</item>
+        <item>哈哈！恭喜恭喜！</item>
+        <item>明天我也回去</item>
+        <item>原本打算初十，现在可能要改期</item>
+        <item>（无主题）</item>
+        <item>忽略你！</item>
+        <item>219</item>
+        <item>她刚出去了，回来再说吧</item>
+        <item>我明天过来拿吧</item>
+        <item>哦</item>
+        <item>你要看吗 【可直接回复】【发自易信】</item>
+    </string-array>
 </resources>
