@@ -20,6 +20,9 @@ import android.widget.Toast;
 import com.simoncherry.fakecall.R;
 import com.simoncherry.fakecall.adapter.ChatAdapter;
 import com.simoncherry.fakecall.bean.ChatBean;
+import com.turing.androidsdk.InitListener;
+import com.turing.androidsdk.SDKInit;
+import com.turing.androidsdk.SDKInitBuilder;
 import com.turing.androidsdk.TuringApiManager;
 
 import org.json.JSONException;
@@ -126,22 +129,22 @@ public class ChatFragment extends Fragment {
 
     private void init() {
         // turingSDK初始化
-//        SDKInitBuilder builder = new SDKInitBuilder(mContext)
-//                .setSecret(TURING_SECRET).setTuringKey(TURING_APIKEY).setUniqueId(UNIQUEID);
-//        SDKInit.init(builder,new InitListener() {
-//            @Override
-//            public void onFail(String error) {
-//                Log.e(TAG, error);
-//                Toast.makeText(mContext, "turingSDK初始化失败！ msg:" + error, Toast.LENGTH_SHORT).show();
-//            }
-//            @Override
-//            public void onComplete() {
-//                // 获取userid成功后，才可以请求Turing服务器，需要请求必须在此回调成功，才可正确请求
-//                mTuringApiManager = new TuringApiManager(mContext);
-//                mTuringApiManager.setHttpListener(myHttpConnectionListener);
-//                Toast.makeText(mContext, "turingSDK初始化成功！", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        SDKInitBuilder builder = new SDKInitBuilder(mContext)
+                .setSecret(TURING_SECRET).setTuringKey(TURING_APIKEY).setUniqueId(UNIQUEID);
+        SDKInit.init(builder,new InitListener() {
+            @Override
+            public void onFail(String error) {
+                Log.e(TAG, error);
+                Toast.makeText(mContext, "turingSDK初始化失败！ msg:" + error, Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onComplete() {
+                // 获取userid成功后，才可以请求Turing服务器，需要请求必须在此回调成功，才可正确请求
+                mTuringApiManager = new TuringApiManager(mContext);
+                mTuringApiManager.setHttpListener(myHttpConnectionListener);
+                Toast.makeText(mContext, "turingSDK初始化成功！", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         ContactNameEntries = getResources().getStringArray(R.array.contact_name_entries);
         tvTitleHead.setText(ContactNameEntries[index]);
@@ -165,7 +168,7 @@ public class ChatFragment extends Fragment {
                 if (!TextUtils.isEmpty(result)) {
                     editText.setText("");
                     addChatMsg2List(result, true);
-                    mTuringApiManager.requestTuringAPI(result);
+                    //mTuringApiManager.requestTuringAPI(result);
                 } else {
                     Toast.makeText(mContext, "发送内容不能为空", Toast.LENGTH_SHORT).show();
                 }

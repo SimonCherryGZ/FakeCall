@@ -19,7 +19,7 @@ import com.simoncherry.fakecall.R;
 import com.simoncherry.fakecall.fragment.CallFragment;
 import com.simoncherry.fakecall.fragment.ChatFragment;
 import com.simoncherry.fakecall.fragment.ContactFragment;
-import com.simoncherry.fakecall.fragment.FirstLayerFragment;
+import com.simoncherry.fakecall.fragment.SettingFragment;
 import com.simoncherry.fakecall.fragment.SmsFragment;
 
 
@@ -92,7 +92,7 @@ public class MainActivity extends FragmentActivity {
                 case 2:
                     return mFragmentAtPos2;
                 default:
-                    FirstLayerFragment mainFragment = new FirstLayerFragment();
+                    SettingFragment mainFragment = new SettingFragment();
                     return mainFragment;
             }
         }
@@ -114,7 +114,6 @@ public class MainActivity extends FragmentActivity {
         if (mFragmentAtPos2 instanceof ChatFragment && viewPager.getCurrentItem() == 2) {
             mFragmentAtPos2 = new SmsFragment();
             myAdapter.notifyDataSetChanged();
-            //Toast.makeText(this, "change!", Toast.LENGTH_SHORT).show();
         } else {
             super.onBackPressed();
         }
@@ -123,6 +122,5 @@ public class MainActivity extends FragmentActivity {
     public void showChatFragment(int index) {
         mFragmentAtPos2 = ChatFragment.newInstance(index);
         myAdapter.notifyDataSetChanged();
-        //Toast.makeText(this, "change!", Toast.LENGTH_SHORT).show();
     }
 }

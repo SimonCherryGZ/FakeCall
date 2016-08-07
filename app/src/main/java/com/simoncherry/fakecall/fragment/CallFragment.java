@@ -2,6 +2,7 @@ package com.simoncherry.fakecall.fragment;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.ListView;
 
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.simoncherry.fakecall.R;
+import com.simoncherry.fakecall.activity.RobotCallActivity;
 import com.simoncherry.fakecall.adapter.CallLogAdapter;
 import com.simoncherry.fakecall.adapter.T9Adapter;
 import com.simoncherry.fakecall.application.SpeechApp;
@@ -268,9 +270,11 @@ public class CallFragment extends Fragment implements View.OnClickListener {
                 delete();
                 break;
             case R.id.phone_view:
-                if (phone_view.getText().toString().length() >= 4) {
-                    call(phone_view.getText().toString());
-                }
+//                if (phone_view.getText().toString().length() >= 4) {
+//                    call(phone_view.getText().toString());
+//                }
+                Intent call = new Intent(mContext, RobotCallActivity.class);
+                startActivity(call);
                 break;
             default:
                 break;

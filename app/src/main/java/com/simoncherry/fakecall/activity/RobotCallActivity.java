@@ -157,11 +157,12 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_robot_call);
         mContext = RobotCallActivity.this;
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        if (bundle != null) {
-            voicer = bundle.getString("voicer");
-        }
+
+//        Intent intent = getIntent();
+//        Bundle bundle = intent.getExtras();
+//        if (bundle != null) {
+//            voicer = bundle.getString("voicer");
+//        }
 
         glowPad = (GlowPadView) findViewById(R.id.incomingCallWidget);
         layoutOnCall = (RelativeLayout) findViewById(R.id.layout_on_call);
@@ -177,6 +178,12 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
         initIAT();
         initTTS();
         initTurling();
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            voicer = bundle.getString("voicer");
+        }
 
         cTimer.start();
         vibrator.vibrate(new long[] { 2000, 500, 2000, 500, 2000 }, 0);
@@ -376,6 +383,8 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
         mCloudVoicersEntries = getResources().getStringArray(R.array.voicer_cloud_entries);
         mCloudVoicersValue = getResources().getStringArray(R.array.voicer_cloud_values);
         mSharedPreferencesTTS = getSharedPreferences(TtsSettings.PREFER_NAME, MODE_PRIVATE);
+
+        voicer = mSharedPreferencesTTS.getString("tts_voice_preference", "xiaoyan");
     }
 
     private void initTurling() {
