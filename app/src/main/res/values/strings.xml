@@ -135,7 +135,7 @@
         <item>13700008817</item>
     </string-array>
     <string-array name="sms_text_entries">
-        <item>好，我先回酒店了</item>
+        <item>好，那我先回酒店了</item>
         <item>我搞掂啦，你出门就话我知啦</item>
         <item>13719273131 任小姐</item>
         <item>OK，多谢你</item>
@@ -152,6 +152,115 @@
         <item>她刚出去了，回来再说吧</item>
         <item>我明天过来拿吧</item>
         <item>哦</item>
+        <item>你要看吗 【可直接回复】【发自易信】</item>
+    </string-array>
+
+    <string-array name="chat_history_0">
+        <item>你到了是吧</item>
+        <item>没看见你啊</item>
+        <item>我去附近买点东西</item>
+        <item>好，那我先回酒店了</item>
+    </string-array>
+    <string-array name="chat_history_1">
+        <item>你到了是吧</item>
+        <item>没看见你啊</item>
+        <item>我去附近买点东西</item>
+        <item>我搞掂啦，你出门就话我知啦</item>
+    </string-array>
+    <string-array name="chat_history_2">
+        <item>昨天说的那份文件还没做好？</item>
+        <item>要问任小姐了</item>
+        <item>你发她电话给我</item>
+        <item>13719273131 任小姐</item>
+    </string-array>
+    <string-array name="chat_history_3">
+        <item>有你快递</item>
+        <item>麻烦你帮我签收下</item>
+        <item>放你桌面了</item>
+        <item>OK，多谢你</item>
+    </string-array>
+    <string-array name="chat_history_4">
+        <item>听日10点？</item>
+        <item>嗯嗯</item>
+        <item>系边度等</item>
+        <item>商业中心等好唔好</item>
+    </string-array>
+    <string-array name="chat_history_5">
+        <item>最终方案图你搞好没有</item>
+        <item>我发了图片到QQ</item>
+        <item>刚看了，还不错，那就选这个吧</item>
+        <item>嗯~~~~~~~~</item>
+    </string-array>
+    <string-array name="chat_history_6">
+        <item>英语选项在哪里，没找到</item>
+        <item>英语编号59</item>
+        <item>好像不对啊</item>
+        <item>更正，英语是57</item>
+    </string-array>
+    <string-array name="chat_history_7">
+        <item>哈哈哈</item>
+        <item>无语</item>
+        <item>反正就是这个道理</item>
+        <item>唔够你讲。。。</item>
+    </string-array>
+    <string-array name="chat_history_8">
+        <item>特么的Bug重现不了，都不知道问题在哪</item>
+        <item>有时是这样的，慢慢来吧</item>
+        <item>尼玛，通宵两晚终于调通了</item>
+        <item>哈哈！恭喜恭喜！</item>
+    </string-array>
+    <string-array name="chat_history_9">
+        <item>刚打电话问过了，只有明天才在</item>
+        <item>你明天去？</item>
+        <item>是啊，只有明天有空</item>
+        <item>明天我也回去</item>
+    </string-array>
+    <string-array name="chat_history_10">
+        <item>上次不是说要过去几天吗</item>
+        <item>嗯，时间有变动</item>
+        <item>原来是定什么时候的？</item>
+        <item>原本打算初十，现在可能要改期</item>
+    </string-array>
+    <string-array name="chat_history_11">
+        <item>在宿舍？</item>
+        <item>实验室</item>
+        <item>帮我拿个快递</item>
+        <item>（无主题）</item>
+    </string-array>
+    <string-array name="chat_history_12">
+        <item>我什么都不知道的</item>
+        <item>你敢说就灭你口</item>
+        <item>看心情哈哈哈哈哈</item>
+        <item>忽略你！</item>
+    </string-array>
+    <string-array name="chat_history_13">
+        <item>到了？</item>
+        <item>车站啦</item>
+        <item>坐边部车</item>
+        <item>219</item>
+    </string-array>
+    <string-array name="chat_history_14">
+        <item>上次找的那家店叫什么？</item>
+        <item>小静可能知道</item>
+        <item>麻烦帮我问下她</item>
+        <item>她刚出去了，回来再说吧</item>
+    </string-array>
+    <string-array name="chat_history_15">
+        <item>你不在宿舍吗，帮你拿了快递</item>
+        <item>我有事回家了，你看下我隔壁宿舍有没有人</item>
+        <item>阿楠在，那我放到她宿舍</item>
+        <item>我明天过来拿吧</item>
+    </string-array>
+    <string-array name="chat_history_16">
+        <item>方案又改了，你有开始做吗</item>
+        <item>已经做了一些了</item>
+        <item>那暂时先不要搞了</item>
+        <item>哦</item>
+    </string-array>
+    <string-array name="chat_history_17">
+        <item>原来第四本都出来了</item>
+        <item>是啊，我昨天有看到</item>
+        <item>你买到了？</item>
         <item>你要看吗 【可直接回复】【发自易信】</item>
     </string-array>
 </resources>

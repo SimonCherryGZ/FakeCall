@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.shizhefei.view.indicator.Indicator;
 import com.shizhefei.view.indicator.IndicatorViewPager;
@@ -91,15 +90,6 @@ public class MainActivity extends FragmentActivity {
                     ContactFragment contactFragment = new ContactFragment();
                     return contactFragment;
                 case 2:
-//                    ChatFragment chatFragment = new ChatFragment();
-//                    return  chatFragment;
-//                    smsFragment = new SmsFragment();
-//                    return  smsFragment;
-//                    if (type == 0) {
-//                        mFragmentAtPos2 = new SmsFragment();
-//                    } else {
-//                        mFragmentAtPos2 = new ChatFragment();
-//                    }
                     return mFragmentAtPos2;
                 default:
                     FirstLayerFragment mainFragment = new FirstLayerFragment();
@@ -124,15 +114,15 @@ public class MainActivity extends FragmentActivity {
         if (mFragmentAtPos2 instanceof ChatFragment && viewPager.getCurrentItem() == 2) {
             mFragmentAtPos2 = new SmsFragment();
             myAdapter.notifyDataSetChanged();
-            Toast.makeText(this, "change!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "change!", Toast.LENGTH_SHORT).show();
         } else {
             super.onBackPressed();
         }
     }
 
-    public void showChatFragment() {
-        mFragmentAtPos2 = new ChatFragment();
+    public void showChatFragment(int index) {
+        mFragmentAtPos2 = ChatFragment.newInstance(index);
         myAdapter.notifyDataSetChanged();
-        Toast.makeText(this, "change!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "change!", Toast.LENGTH_SHORT).show();
     }
 }

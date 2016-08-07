@@ -12,15 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.simoncherry.fakecall.R;
 import com.simoncherry.fakecall.adapter.ChatAdapter;
 import com.simoncherry.fakecall.bean.ChatBean;
-import com.turing.androidsdk.InitListener;
-import com.turing.androidsdk.SDKInit;
-import com.turing.androidsdk.SDKInitBuilder;
 import com.turing.androidsdk.TuringApiManager;
 
 import org.json.JSONException;
@@ -58,11 +57,16 @@ public class ChatFragment extends Fragment {
     private List<ChatBean> list;
     private ChatAdapter adapter;
 
+    private TextView tvTitleHead;
+    private ImageView ivTitleLeft;
     private EditText editText;
     private Button btnSend;
 
     private Context mContext;
 
+    private String[] ContactNameEntries;
+    private String[] ChatLogEntries;
+    private int index = 0;
     public final int RESONESE = 1024;
 
     private Handler myHandler = new Handler() {
@@ -82,14 +86,28 @@ public class ChatFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static ChatFragment newInstance(int index) {
+        ChatFragment chatFragment = new ChatFragment();
+        Bundle args = new Bundle();
+        args.putInt("index", index);
+        chatFragment.setArguments(args);
+        return chatFragment;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
         chatList = (ListView) view.findViewById(R.id.list_chat);
+        tvTitleHead = (TextView) view.findViewById(R.id.topbar_title);
+        ivTitleLeft = (ImageView) view.findViewById(R.id.iv_back);
         editText = (EditText) view.findViewById(R.id.edt_text);
         btnSend = (Button) view.findViewById(R.id.btn_send);
+
+        if (getArguments() != null) {
+            index = getArguments().getInt("index");
+        }
 
         return view;
     }
@@ -101,29 +119,44 @@ public class ChatFragment extends Fragment {
         init();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     private void init() {
         // turingSDK初始化
-        SDKInitBuilder builder = new SDKInitBuilder(mContext)
-                .setSecret(TURING_SECRET).setTuringKey(TURING_APIKEY).setUniqueId(UNIQUEID);
-        SDKInit.init(builder,new InitListener() {
-            @Override
-            public void onFail(String error) {
-                Log.e(TAG, error);
-                Toast.makeText(mContext, "turingSDK初始化失败！ msg:" + error, Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onComplete() {
-                // 获取userid成功后，才可以请求Turing服务器，需要请求必须在此回调成功，才可正确请求
-                mTuringApiManager = new TuringApiManager(mContext);
-                mTuringApiManager.setHttpListener(myHttpConnectionListener);
-                Toast.makeText(mContext, "turingSDK初始化成功！", Toast.LENGTH_SHORT).show();
-            }
-        });
+//        SDKInitBuilder builder = new SDKInitBuilder(mContext)
+//                .setSecret(TURING_SECRET).setTuringKey(TURING_APIKEY).setUniqueId(UNIQUEID);
+//        SDKInit.init(builder,new InitListener() {
+//            @Override
+//            public void onFail(String error) {
+//                Log.e(TAG, error);
+//                Toast.makeText(mContext, "turingSDK初始化失败！ msg:" + error, Toast.LENGTH_SHORT).show();
+//            }
+//            @Override
+//            public void onComplete() {
+//                // 获取userid成功后，才可以请求Turing服务器，需要请求必须在此回调成功，才可正确请求
+//                mTuringApiManager = new TuringApiManager(mContext);
+//                mTuringApiManager.setHttpListener(myHttpConnectionListener);
+//                Toast.makeText(mContext, "turingSDK初始化成功！", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+        ContactNameEntries = getResources().getStringArray(R.array.contact_name_entries);
+        tvTitleHead.setText(ContactNameEntries[index]);
 
         list = new ArrayList<>();
-        //loadMockChat();
+        loadMockChat(index);
         setAdapter(list);
         adapter.notifyDataSetChanged();
+
+        ivTitleLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,16 +207,33 @@ public class ChatFragment extends Fragment {
         chatList.setAdapter(adapter);
     }
 
-    private void loadMockChat() {
-        for (int i=0; i<10; i++) {
-            ChatBean chatBean = new ChatBean();
-            chatBean.setText("模拟对话——" + i);
-            if (i%2 == 0) {
-                chatBean.setMine(false);
-            } else {
-                chatBean.setMine(true);
+    private void loadMockChat(int index) {
+//        for (int i=0; i<10; i++) {
+//            ChatBean chatBean = new ChatBean();
+//            chatBean.setText("模拟对话——" + i);
+//            if (i%2 == 0) {
+//                chatBean.setMine(false);
+//            } else {
+//                chatBean.setMine(true);
+//            }
+//            list.add(chatBean);
+//        }
+        if (index >= 0 && index <= 17) {
+            String entryName = "chat_history_" + index;
+            int resId = getResources().getIdentifier(entryName, "array", mContext.getPackageName());
+            //ChatLogEntries = getResources().getStringArray(R.array.contact_name_entries);
+            ChatLogEntries = getResources().getStringArray(resId);
+
+            for (int i=0; i<ChatLogEntries.length; i++) {
+                ChatBean chatBean = new ChatBean();
+                chatBean.setText(ChatLogEntries[i]);
+                if (i%2 == 0) {
+                    chatBean.setMine(false);
+                } else {
+                    chatBean.setMine(true);
+                }
+                list.add(chatBean);
             }
-            list.add(chatBean);
         }
     }
 

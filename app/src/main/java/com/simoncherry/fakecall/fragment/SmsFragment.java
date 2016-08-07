@@ -73,7 +73,7 @@ public class SmsFragment extends Fragment {
         SmsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((MainActivity) getActivity()).showChatFragment();
+                ((MainActivity) getActivity()).showChatFragment(position);
             }
         });
     }
