@@ -38,6 +38,7 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechSynthesizer;
+import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.sunflower.FlowerCollector;
 import com.simoncherry.fakecall.R;
@@ -598,9 +599,17 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
     };
 
     public void setIATParam() {
+        if (mSharedPreferencesIAT.getBoolean("iat_mode_switch", false)) {
+            mEngineTypeIAT = SpeechConstant.TYPE_LOCAL;
+            if (!SpeechUtility.getUtility().checkServiceInstalled()) {
+                mInstaller.install();
+            }
+        } else {
+            mEngineTypeIAT = SpeechConstant.TYPE_CLOUD;
+        }
+
         // 清空参数
         mIat.setParameter(SpeechConstant.PARAMS, null);
-
         // 设置听写引擎
         mIat.setParameter(SpeechConstant.ENGINE_TYPE, mEngineTypeIAT);
         // 设置返回结果格式
@@ -634,6 +643,15 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
     }
 
     private void setTTSParam(){
+        if (mSharedPreferencesTTS.getBoolean("tts_mode_switch", false)) {
+            mEngineTypeTTS = SpeechConstant.TYPE_LOCAL;
+            if (!SpeechUtility.getUtility().checkServiceInstalled()) {
+                mInstaller.install();
+            }
+        } else {
+            mEngineTypeTTS = SpeechConstant.TYPE_CLOUD;
+        }
+
         // 清空参数
         mTts.setParameter(SpeechConstant.PARAMS, null);
         // 根据合成引擎设置相应参数
