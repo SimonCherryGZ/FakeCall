@@ -18,14 +18,22 @@ speech recognition + speech synthesis + chatbot
 
 应用截图 
 -----------------------------------
-### 拨打电话 -- 点击联系人，选择科大讯飞在线发音人
+### 通话记录、联系人和设置界面
+通话记录界面中点击拨号会显示来电画面，发音的是设置界面所选的讯飞在线发音人。
+
+联系人界面点击联系人拨打会显示去电画面，发音的是联系人名字对应的讯飞在线发音人。
+
 ![image](https://github.com/SimonCherryGZ/FakeCall/raw/master/screenshots/1.png)
 ![image](https://github.com/SimonCherryGZ/FakeCall/raw/master/screenshots/3.png)
-![image](https://github.com/SimonCherryGZ/FakeCall/raw/master/screenshots/2.png)
-
-### 接听电话 -- 通过语音识别与合成，和图灵机器人聊天
 ![image](https://github.com/SimonCherryGZ/FakeCall/raw/master/screenshots/4.png)
+
+### 通话界面 -- 与图灵机器人语音聊天
 ![image](https://github.com/SimonCherryGZ/FakeCall/raw/master/screenshots/5.png)
 ![image](https://github.com/SimonCherryGZ/FakeCall/raw/master/screenshots/6.png)
+
+### 短信界面 -- 与图灵机器人文字聊天
+![image](https://github.com/SimonCherryGZ/FakeCall/raw/master/screenshots/2.png)
+![image](https://github.com/SimonCherryGZ/FakeCall/raw/master/screenshots/7.png)
+
 
 > Written with [StackEdit](https://stackedit.io/).
