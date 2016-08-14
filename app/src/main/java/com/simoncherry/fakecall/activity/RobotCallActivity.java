@@ -12,6 +12,7 @@ import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
@@ -29,6 +30,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iflytek.cloud.ErrorCode;
@@ -57,6 +59,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import turing.os.http.core.ErrorMessage;
 import turing.os.http.core.HttpConnectionListener;
@@ -70,6 +73,7 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
     private boolean isMute = false;
     private boolean isKeyBoard = false;
     private boolean isMore = false;
+    private boolean isDial = false;
 
     private SpeechRecognizer mIat;
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
@@ -97,6 +101,7 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
     private final String UNIQUEID = "0816203538";
 
 
+    private TextView tvTitle;
     private GlowPadView glowPad;
     private RelativeLayout layoutOnCall;
     private Chronometer chronometer;
@@ -106,6 +111,8 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
     private ImageView ivKeyBoard;
     private ImageView ivMore;
 
+    private Map<Integer, Integer> soundMap = new HashMap<Integer, Integer>();
+    private SoundPool soundPool;
     private CountDownTimer cTimer;
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
@@ -159,12 +166,14 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
         setContentView(R.layout.activity_robot_call);
         mContext = RobotCallActivity.this;
 
-//        Intent intent = getIntent();
-//        Bundle bundle = intent.getExtras();
-//        if (bundle != null) {
-//            voicer = bundle.getString("voicer");
-//        }
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) {
+            //voicer = bundle.getString("voicer");
+            isDial = bundle.getBoolean("isDial");
+        }
 
+        tvTitle = (TextView) findViewById(R.id.tv_title);
         glowPad = (GlowPadView) findViewById(R.id.incomingCallWidget);
         layoutOnCall = (RelativeLayout) findViewById(R.id.layout_on_call);
         chronometer = (Chronometer) findViewById(R.id.tv_time);
@@ -180,22 +189,26 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
         initTTS();
         initTurling();
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
+//        Intent intent = getIntent();
+//        Bundle bundle = intent.getExtras();
         if (bundle != null) {
             voicer = bundle.getString("voicer");
         }
 
-        cTimer.start();
-        vibrator.vibrate(new long[] { 2000, 500, 2000, 500, 2000 }, 0);
+        if (!isDial) {
+            cTimer.start();
+            vibrator.vibrate(new long[]{2000, 500, 2000, 500, 2000}, 0);
 
-        try {
-            mediaPlayer.setDataSource(this, RingtoneManager
-                    .getDefaultUri(RingtoneManager.TYPE_RINGTONE));
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                mediaPlayer.setDataSource(this, RingtoneManager
+                        .getDefaultUri(RingtoneManager.TYPE_RINGTONE));
+                mediaPlayer.prepare();
+                mediaPlayer.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            showWaitingUI();
         }
     }
 
@@ -251,6 +264,8 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
                     startActivity(ttsSetting);
                     break;
                 case R.id.btn_cancel_call:
+                    playSE(soundMap.get(1), 0);
+
                     if (mIat.isListening()) {
                         mIat.stopListening();
                     }
@@ -269,74 +284,51 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
     };
 
     private void initLayout() {
-        glowPad.setOnTriggerListener(new GlowPadView.OnTriggerListener() {
-            @Override
-            public void onGrabbed(View v, int handle) {
-                // Do nothing
-            }
-            @Override
-            public void onReleased(View v, int handle) {
-                // Do nothing
-            }
-            @Override
-            public void onTrigger(View v, int target) {
-                //Toast.makeText(FakeCallActivity.this, "Target triggered! ID=" + target, Toast.LENGTH_SHORT).show();
-                glowPad.reset(true);
-
-                if(target == 0) {
-                    vibrator.cancel();
-                    mediaPlayer.stop();
-                    cTimer.cancel();
-                    glowPad.setVisibility(View.GONE);
-                    layoutOnCall.setVisibility(View.VISIBLE);
-
-                    chronometer.setFormat("%s");
-                    chronometer.setBase(SystemClock.elapsedRealtime());
-                    chronometer.start();
-
-                    audioManager.setSpeakerphoneOn(false);//关闭扬声器
-                    audioManager.setRouting(AudioManager.MODE_NORMAL, AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
-                    setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
-                    audioManager.setMode(AudioManager.MODE_IN_CALL);  //把声音设定成Earpiece（听筒）出来，设定为正在通话中
-
-                    setTTSParam();
-                    int code = mTts.startSpeaking("喂，你好，请问是蒲蒲团信息科技有限公司吗？", mTtsListener);
-                    if (code != ErrorCode.SUCCESS) {
-                        if(code == ErrorCode.ERROR_COMPONENT_NOT_INSTALLED){
-                            //未安装则跳转到提示安装页面
-                            mInstaller.install();
-                        }else {
-                            showTip("语音合成失败,错误码: " + code);
-                        }
-                    }
-
-                    mIatResults.clear();
-                    setIATParam();
-                    ret = mIat.startListening(mRecognizerListener);
-                    if (ret != ErrorCode.SUCCESS) {
-                        showTip("听写失败,错误码：" + ret);
-                    } else {
-                        showTip(getString(R.string.text_begin));
-                    }
-
-                } else {
-                    vibrator.cancel();
-                    mediaPlayer.stop();
-                    cTimer.cancel();
-                    finish();
+        if (!isDial) {
+            glowPad.setOnTriggerListener(new GlowPadView.OnTriggerListener() {
+                @Override
+                public void onGrabbed(View v, int handle) {
+                    // Do nothing
                 }
-            }
 
-            @Override
-            public void onGrabbedStateChange(View v, int handle) {
-                // Do nothing
-            }
+                @Override
+                public void onReleased(View v, int handle) {
+                    // Do nothing
+                }
 
-            @Override
-            public void onFinishFinalAnimation() {
-                // Do nothing
-            }
-        });
+                @Override
+                public void onTrigger(View v, int target) {
+                    //Toast.makeText(FakeCallActivity.this, "Target triggered! ID=" + target, Toast.LENGTH_SHORT).show();
+                    glowPad.reset(true);
+
+                    if (target == 0) {
+                        vibrator.cancel();
+                        mediaPlayer.stop();
+                        cTimer.cancel();
+                        hideGlowPadAndStartChronometer();
+                        startTalking();
+
+                    } else {
+                        vibrator.cancel();
+                        mediaPlayer.stop();
+                        cTimer.cancel();
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onGrabbedStateChange(View v, int handle) {
+                    // Do nothing
+                }
+
+                @Override
+                public void onFinishFinalAnimation() {
+                    // Do nothing
+                }
+            });
+        } else {
+            glowPad.setVisibility(View.GONE);
+        }
 
         ivSpeaker.setOnClickListener(myOnClickListener);
         ivMute.setOnClickListener(myOnClickListener);
@@ -346,6 +338,10 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
     }
 
     private void initSystem() {
+        soundPool = new SoundPool(2, AudioManager.STREAM_SYSTEM, 5);
+        soundMap.put(0, soundPool.load(mContext, R.raw.waiting, 0));
+        soundMap.put(1, soundPool.load(mContext, R.raw.click, 0));
+
         mediaPlayer = new MediaPlayer();
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
         audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
@@ -725,9 +721,15 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
         mTts.destroy();
 
         if(sensorManager != null){
-            localWakeLock.release();//释放电源锁，如果不释放finish这个acitivity后仍然会有自动锁屏的效果，不信可以试一试
+            if (localWakeLock.isHeld()) {
+                localWakeLock.release();//释放电源锁，如果不释放finish这个acitivity后仍然会有自动锁屏的效果，不信可以试一试
+            }
             sensorManager.unregisterListener(this);//注销传感器监听
         }
+
+        soundPool.release();
+        audioManager.setSpeakerphoneOn(true);
+        audioManager.setMode(AudioManager.MODE_NORMAL);
     }
 
     @Override
@@ -779,5 +781,70 @@ public class RobotCallActivity extends AppCompatActivity implements SensorEventL
                                 dialog.dismiss();
                             }
                         }).show();
+    }
+
+    private void showWaitingUI() {
+        hideGlowPadAndStartChronometer();
+        tvTitle.setText("正在拨打");
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                playSE(soundMap.get(0), -1);
+            }
+        }, 20);
+
+        new Handler().postDelayed(new Runnable(){
+            public void run() {
+                soundPool.stop(soundMap.get(0));
+                startTalking();
+            }
+        }, 10000);
+    }
+
+    private void hideGlowPadAndStartChronometer() {
+        glowPad.setVisibility(View.GONE);
+        layoutOnCall.setVisibility(View.VISIBLE);
+
+        chronometer.setFormat("%s");
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        chronometer.start();
+    }
+
+    private void startTalking() {
+        playSE(soundMap.get(1), 0);
+        tvTitle.setText("通话中");
+
+        audioManager.setSpeakerphoneOn(false);//关闭扬声器
+        audioManager.setRouting(AudioManager.MODE_NORMAL, AudioManager.ROUTE_EARPIECE, AudioManager.ROUTE_ALL);
+        setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+        audioManager.setMode(AudioManager.MODE_IN_CALL);  //把声音设定成Earpiece（听筒）出来，设定为正在通话中
+
+        setTTSParam();
+        int code = mTts.startSpeaking("喂，你好，请问是蒲蒲团信息科技有限公司吗？", mTtsListener);
+        if (code != ErrorCode.SUCCESS) {
+            if (code == ErrorCode.ERROR_COMPONENT_NOT_INSTALLED) {
+                //未安装则跳转到提示安装页面
+                mInstaller.install();
+            } else {
+                showTip("语音合成失败,错误码: " + code);
+            }
+        }
+
+        mIatResults.clear();
+        setIATParam();
+        ret = mIat.startListening(mRecognizerListener);
+        if (ret != ErrorCode.SUCCESS) {
+            showTip("听写失败,错误码：" + ret);
+        } else {
+            showTip(getString(R.string.text_begin));
+        }
+    }
+
+    private void playSE(int id, int loop) {
+        int max = audioManager.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+        int current = audioManager.getStreamVolume(AudioManager.STREAM_SYSTEM);
+
+        float value = (float)0.7 / max * current;
+        soundPool.setVolume(soundPool.play(id, value, value, 0, loop, 1f), value, value);
     }
 }

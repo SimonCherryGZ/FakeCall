@@ -21,6 +21,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:gravity="center_vertical"
+            android:textColor="@android:color/black"
             tools:text="dgnpofna;ofasfafnafafanfapofnaopfasopfsaopdnaspoddasdasdasdasdasd" />
 
         <TextView
@@ -54,6 +55,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:gravity="center_vertical"
+            android:textColor="@android:color/black"
             tools:text="噼噼啪啪拍噼噼啪啪拍噼噼啪啪拍噼噼啪啪拍噼噼啪啪拍" />
 
         <TextView

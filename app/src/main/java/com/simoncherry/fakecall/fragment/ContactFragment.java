@@ -163,6 +163,7 @@ public class ContactFragment extends Fragment {
                                 Intent call = new Intent(mContext, RobotCallActivity.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putString("voicer", cb.getPinyin());
+                                bundle.putBoolean("isDial", true);
                                 call.putExtras(bundle);
                                 startActivity(call);
                                 break;

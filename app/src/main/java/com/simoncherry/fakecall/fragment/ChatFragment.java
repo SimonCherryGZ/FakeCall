@@ -168,7 +168,7 @@ public class ChatFragment extends Fragment {
                 if (!TextUtils.isEmpty(result)) {
                     editText.setText("");
                     addChatMsg2List(result, true);
-                    //mTuringApiManager.requestTuringAPI(result);
+                    mTuringApiManager.requestTuringAPI(result);
                 } else {
                     Toast.makeText(mContext, "发送内容不能为空", Toast.LENGTH_SHORT).show();
                 }
